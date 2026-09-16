@@ -1,16 +1,33 @@
-import sunny from '../assets/images/sunny.png'
-import { useState } from 'react'
-
-
+import sunny from "../assets/images/sunny.png";
+import './WheatherApp.css'
+import { getWeatherInfo } from '../utils/weatherCode'
+import { useState } from "react";
 
 const WheatherApp = () => {
-
-  const [location, setLocation] = useState('')
+  const [location, setLocation] = useState("");
 
   const handleInputChanges = (e) => {
-  setLocation(e.target.value)
-  }
-  console.log(location)
+    setLocation(e.target.value);
+  };
+  console.log(location);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      search(location);
+    }
+  };
+
+  const search = (city) => {
+    console.log("Searching for:", city);
+  };
+
+  const [data, setData] = useState(null)
+
+  console.log(getWeatherInfo(0))
+  console.log(getWeatherInfo(63))
+  console.log(getWeatherInfo(75))
+
+  console.log(data)
 
   return (
     <div className="container">
@@ -27,8 +44,12 @@ const WheatherApp = () => {
               placeholder="Enter Location"
               value={location}
               onChange={handleInputChanges}
+              onKeyDown={handleKeyDown}
             />
-            <i className="fa-solid fa-magnifying-glass"></i>
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={() => search(location)}
+            ></i>
           </div>
         </div>
 
@@ -57,7 +78,7 @@ const WheatherApp = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default WheatherApp
+export default WheatherApp;
