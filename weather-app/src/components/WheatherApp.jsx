@@ -5,9 +5,11 @@ import sunny from "../assets/images/sunny.png";
 import cloudy from "../assets/images/cloudy.png";
 import rainy from "../assets/images/rainy.png";
 import snowy from "../assets/images/snowy.png";
+import loadingGif from "../assets/images/loading.gif";
 
 const WheatherApp = () => {
   const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChanges = (e) => {
     setLocation(e.target.value);
@@ -84,10 +86,11 @@ const WheatherApp = () => {
     }
 
     try {
+      setLoading(true);
+
       const coordinates = await getCoordinates(normalizedCity);
 
       if (!coordinates) {
-        console.log("City not found");
         return;
       }
 
@@ -107,6 +110,8 @@ const WheatherApp = () => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,7 +120,6 @@ const WheatherApp = () => {
   // getCoordinates('São Paulo').then(console.log)
 
   // getCoordinates('cidade-que-nao-existe-xyz').then(console.log)
-
 
   const formatDate = (dateTime) => {
     if (!dateTime) {
@@ -165,6 +169,12 @@ const WheatherApp = () => {
             ></i>
           </div>
         </div>
+
+        {loading ? (
+          <img className="loader" src={loadingGif} alt="Loading" />
+        ) : (
+          <>{/* conteúdo meteorológico */}</>
+        )}
 
         <div className="weather">
           <img src={weatherImage} alt={weatherInfo?.description || "Weather"} />
