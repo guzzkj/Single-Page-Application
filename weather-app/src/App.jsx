@@ -1,10 +1,12 @@
 import './App.css'
+import './components/WheatherApp.jsx'
+import WheatherApp from './components/WheatherApp.jsx'
 
 function App() {
 
   return (
     <>
-      Hello World!
+      <WheatherApp/>
     </>
   )
 }
