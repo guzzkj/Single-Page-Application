@@ -10,6 +10,7 @@ import loadingGif from "../assets/images/loading.gif";
 const WheatherApp = () => {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputChanges = (e) => {
     setLocation(e.target.value);
@@ -24,11 +25,11 @@ const WheatherApp = () => {
 
   const [data, setData] = useState(null);
 
-  console.log(getWeatherInfo(0));
-  console.log(getWeatherInfo(63));
-  console.log(getWeatherInfo(75));
+  // console.log(getWeatherInfo(0));
+  // console.log(getWeatherInfo(63));
+  // console.log(getWeatherInfo(75));
 
-  console.log(data);
+  // console.log(data);
 
   const getCoordinates = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
@@ -82,15 +83,19 @@ const WheatherApp = () => {
     const normalizedCity = city.trim();
 
     if (!normalizedCity) {
+      setError("Enter a city name");
       return;
     }
 
     try {
       setLoading(true);
+      setError("");
 
       const coordinates = await getCoordinates(normalizedCity);
 
       if (!coordinates) {
+        setError("City not found");
+        setData(null);
         return;
       }
 
@@ -108,8 +113,12 @@ const WheatherApp = () => {
         weatherCode: currentWeather.weather_code,
         time: currentWeather.time,
       });
-    } catch (error) {
-      console.error(error);
+
+      setLocation("");
+    } catch (err) {
+      console.error(err);
+      setError("Unable to load weather data");
+      setData(null);
     } finally {
       setLoading(false);
     }
@@ -175,6 +184,8 @@ const WheatherApp = () => {
         ) : (
           <>{/* conteúdo meteorológico */}</>
         )}
+
+        {error && <div className="not-found">{error}</div>}
 
         <div className="weather">
           <img src={weatherImage} alt={weatherInfo?.description || "Weather"} />
